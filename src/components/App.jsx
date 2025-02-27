@@ -5,25 +5,29 @@ import Options from "./Options/Options";
 import Feedback from "./Feedback/Feedback";
 
 function App() {
-  // const [feedback, setFeedback] = useState({
-  //   good: 0,
-  //   neutral: 0,
-  //   bad: 0,
-  // });
   const LS_KEY = "feedback-value";
   const [feedback, setFeedback] = useState(() => {
-    const dataLocalStorage = localStorage.getItem(LS_KEY);
-    return dataLocalStorage === null ? {} : JSON.parse(dataLocalStorage);
+    try {
+      const dataLocalStorage = window.localStorage.getItem(LS_KEY);
+      return dataLocalStorage === null ? {} : JSON.parse(dataLocalStorage);
+    } catch (error) {
+      console.log(error);
+      return {};
+    }
   });
   useEffect(() => {
-    const normalizeDateInLocalStorage = JSON.stringify(feedback);
-    window.localStorage.setItem(LS_KEY, normalizeDateInLocalStorage);
+    try {
+      const normalizeDateInLocalStorage = JSON.stringify(feedback);
+      window.localStorage.setItem(LS_KEY, normalizeDateInLocalStorage);
+    } catch (error) {
+      return console.log(error);
+    }
   }, [feedback]);
 
   const updateFeedback = (feedbackType) => {
     setFeedback((prevState) => ({
       ...prevState,
-      [feedbackType]: prevState[feedbackType] + 1,
+      [feedbackType]: (prevState[feedbackType] || 0) + 1,
     }));
   };
 

@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import "./App.css";
+import DataFeedback from "./DataFeedback/DataFeedback";
+import Notification from "./Notification/Notification";
 import Description from "./Description/Description";
 import Options from "./Options/Options";
 import Feedback from "./Feedback/Feedback";
@@ -9,10 +11,12 @@ function App() {
   const [feedback, setFeedback] = useState(() => {
     try {
       const dataLocalStorage = window.localStorage.getItem(LS_KEY);
-      return dataLocalStorage === null ? {} : JSON.parse(dataLocalStorage);
+      return dataLocalStorage === null
+        ? DataFeedback()
+        : JSON.parse(dataLocalStorage);
     } catch (error) {
       console.log(error);
-      return {};
+      return { good: 0, neutral: 0, bad: 0 };
     }
   });
   useEffect(() => {
@@ -53,7 +57,7 @@ function App() {
           positiveFeedback={positiveFeedback}
         />
       ) : (
-        "No feedback yet"
+        <Notification />
       )}
     </>
   );
